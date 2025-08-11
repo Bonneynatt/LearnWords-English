@@ -1,5 +1,5 @@
 {
-  "name": "task-manager",
+  "name": "learning-english",
   "version": "1.0.0",
   "description": "Complete MERN Task Manager Application",
   "scripts": {
@@ -12,6 +12,6 @@
     "concurrently": "^7.0.0",
     "mocha": "^11.0.1"
   },
-  "author": "Task Manager Team",
+  "author": "Learning English Team",
   "license": "ISC"
 }
