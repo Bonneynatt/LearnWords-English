@@ -40,14 +40,6 @@ const Navbar = () => {
                 >
                   Quiz
                 </Link>
-                <Link 
-                  to="/profile" 
-                  className={`hover:text-gray-200 transition flex items-center ${
-                    location.pathname === '/profile' ? 'text-yellow-300 font-semibold' : ''
-                  }`}
-                >
-                  Profile
-                </Link>
                 <div className="flex items-center space-x-3">
                   <span className="text-sm">Welcome, {user.name}!</span>
                   <button
