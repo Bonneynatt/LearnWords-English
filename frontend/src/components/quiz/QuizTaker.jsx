@@ -69,7 +69,7 @@ const QuizTaker = () => {
 
       return () => clearInterval(timer);
     }
-  }, [timeRemaining, quizCompleted]);
+  }, [timeRemaining, quizCompleted, submitQuiz]);
 
   
 
