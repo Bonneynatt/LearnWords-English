@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+//This is sign up page for the app
+
 const Signup = () => {
   const [formData, setFormData] = useState({ 
     name: '', 
