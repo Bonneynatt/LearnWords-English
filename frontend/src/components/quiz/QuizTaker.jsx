@@ -52,6 +52,27 @@ const QuizTaker = () => {
   };
   }, [quizId]);
 
+  const submitQuiz = useCallback(async () => {
+    try {
+      setSubmitting(true);
+      
+      const timeSpent = (quiz.timeLimit * 60) - timeRemaining;
+      const response = await axiosInstance.post(`/quiz/attempt/${attempt._id}/complete`, {
+        timeSpent
+      });
+      
+      setResults(response.data.data);
+      setQuizCompleted(true);
+      setShowConfirm(false);
+      
+    } catch (error) {
+      setError('Failed to submit quiz');
+      console.error('Error:', error);
+    } finally {
+      setSubmitting(false);
+    }
+  }, [quiz, timeRemaining, attempt]);
+
   useEffect(() => {
     if (timeRemaining > 0 && !quizCompleted) {
       const timer = setInterval(() => {
@@ -109,27 +130,6 @@ const QuizTaker = () => {
   const handleSubmitClick = () => {
     setShowConfirm(true);
   };
-
-  const submitQuiz = useCallback(async () => {
-    try {
-      setSubmitting(true);
-      
-      const timeSpent = (quiz.timeLimit * 60) - timeRemaining;
-      const response = await axiosInstance.post(`/quiz/attempt/${attempt._id}/complete`, {
-        timeSpent
-      });
-      
-      setResults(response.data.data);
-      setQuizCompleted(true);
-      setShowConfirm(false);
-      
-    } catch (error) {
-      setError('Failed to submit quiz');
-      console.error('Error:', error);
-    } finally {
-      setSubmitting(false);
-    }
-  }, [quiz, timeRemaining, attempt]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
