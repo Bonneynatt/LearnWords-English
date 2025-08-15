@@ -14,24 +14,6 @@ const FlashcardViewer = () => {
     limit: 10
   });
 
-  useEffect(() => {
-    loadFlashcards();
-  }, [studyMode, filters, loadFlashcards]);
-
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (e.key === 'ArrowLeft') prevCard();
-      if (e.key === 'ArrowRight') nextCard();
-      if (e.key === ' ') {
-        e.preventDefault();
-        toggleAnswer();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyPress);
-    return () => document.removeEventListener('keydown', handleKeyPress);
-  }, [prevCard, nextCard, toggleAnswer]);
-
   const loadFlashcards = useCallback(async () => {
     try {
       setLoading(true);
@@ -89,6 +71,24 @@ const FlashcardViewer = () => {
   const toggleAnswer = useCallback(() => {
     setShowAnswer(!showAnswer);
   }, [showAnswer]);
+
+  useEffect(() => {
+    loadFlashcards();
+  }, [loadFlashcards]);
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === 'ArrowLeft') prevCard();
+      if (e.key === 'ArrowRight') nextCard();
+      if (e.key === ' ') {
+        e.preventDefault();
+        toggleAnswer();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, [prevCard, nextCard, toggleAnswer]);
 
   const currentCard = flashcards[currentIndex];
 

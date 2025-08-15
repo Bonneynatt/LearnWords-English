@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import flashcardService from '../../services/flashcardService';
 import FlashcardForm from './FlashcardForm';
 
 const FlashcardManager = () => {
+  const { isAuthenticated } = useAuth();
   const [flashcards, setFlashcards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -15,8 +17,15 @@ const FlashcardManager = () => {
   });
 
   const fetchFlashcards = useCallback(async () => {
+    if (!isAuthenticated) {
+      setLoading(false);
+      setError('Please login to view your flashcards');
+      return;
+    }
+
     try {
       setLoading(true);
+      setError('');
       const response = await flashcardService.getMyFlashcards();
       let filteredCards = response.data;
 
@@ -38,12 +47,16 @@ const FlashcardManager = () => {
 
       setFlashcards(filteredCards);
     } catch (error) {
-      setError('Failed to fetch flashcards');
       console.error('Fetch error:', error);
+      if (error.response?.status === 401) {
+        setError('Please login to view your flashcards');
+      } else {
+        setError(error.response?.data?.message || 'Failed to fetch flashcards');
+      }
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [filters, isAuthenticated]);
 
   useEffect(() => {
     fetchFlashcards();
@@ -91,6 +104,19 @@ const FlashcardManager = () => {
   };
 
   if (loading) return <div className="text-center p-4">Loading flashcards...</div>;
+
+  if (!isAuthenticated) {
+    return (
+      <div className="container mx-auto p-4 text-center">
+        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+          Please login to manage your flashcards
+        </div>
+        <a href="/login" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+          Go to Login
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4">

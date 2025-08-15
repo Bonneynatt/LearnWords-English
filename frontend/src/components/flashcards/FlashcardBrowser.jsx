@@ -26,8 +26,8 @@ const FlashcardBrowser = () => {
       setPagination(response.pagination);
       setError('');
     } catch (error) {
-      setError('Failed to fetch flashcards');
       console.error('Fetch error:', error);
+      setError(error.response?.data?.message || 'Failed to fetch flashcards');
     } finally {
       setLoading(false);
     }

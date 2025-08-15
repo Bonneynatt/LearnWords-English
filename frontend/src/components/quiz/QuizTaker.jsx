@@ -23,12 +23,12 @@ const QuizTaker = () => {
       setLoading(true);
       
       // Fetch quiz details
-      const quizResponse = await axiosInstance.get(`/quiz/${quizId}`);
+      const quizResponse = await axiosInstance.get(`/api/quiz/${quizId}`);
       const quizData = quizResponse.data.data;
       setQuiz(quizData);
       
       // Start quiz attempt
-      const attemptResponse = await axiosInstance.post(`/quiz/${quizId}/attempt`);
+      const attemptResponse = await axiosInstance.post(`/api/quiz/${quizId}/attempt`);
       const attemptData = attemptResponse.data.data;
       setAttempt(attemptData);
       
@@ -58,7 +58,7 @@ const QuizTaker = () => {
       setSubmitting(true);
       
       const timeSpent = (quiz.timeLimit * 60) - timeRemaining;
-      const response = await axiosInstance.post(`/quiz/attempt/${attempt._id}/complete`, {
+      const response = await axiosInstance.post(`/api/quiz/attempt/${attempt._id}/complete`, {
         timeSpent
       });
       
@@ -99,7 +99,7 @@ const QuizTaker = () => {
     
     // Submit answer to backend immediately
     try {
-      await axiosInstance.post(`/quiz/attempt/${attempt._id}/answer`, {
+      await axiosInstance.post(`/api/quiz/attempt/${attempt._id}/answer`, {
         questionIndex,
         selectedOption: optionIndex
       });
