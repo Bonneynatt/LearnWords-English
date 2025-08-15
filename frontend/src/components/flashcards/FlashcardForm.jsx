@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-//This is for flashcards
+//This is FlashcardForm.jsx
 
 const FlashcardForm = ({ initialData, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
