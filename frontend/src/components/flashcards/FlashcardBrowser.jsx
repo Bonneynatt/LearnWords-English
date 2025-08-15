@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import flashcardService from '../../services/flashcardService';
-
+//This is FlashcardBrowser.jsx
 const FlashcardBrowser = () => {
   const [flashcards, setFlashcards] = useState([]);
   const [loading, setLoading] = useState(true);
