@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
-import Register from './pages/Signup';
+import Signup from './pages/Signup';
 import FlashcardManager from './components/flashcards/FlashcardManager';
 import QuizManager from './components/quiz/QuizManager';
 import QuizTaker from './components/quiz/QuizTaker';
