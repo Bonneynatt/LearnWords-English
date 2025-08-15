@@ -14,7 +14,7 @@ const Signup = () => {
   const [error, setError] = useState('');
   const [validationErrors, setValidationErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
+  const { signup } = useAuth();
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
@@ -86,7 +86,7 @@ const Signup = () => {
       return;
     }
 
-    const result = await register(formData);
+    const result = await signup(formData);
     
     if (result.success) {
       navigate('/flashcards');

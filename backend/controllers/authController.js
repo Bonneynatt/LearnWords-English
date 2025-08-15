@@ -7,7 +7,7 @@ const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
-const registerUser = async (req, res) => {
+const signupUser = async (req, res) => {
     const { name, email, password, university, address } = req.body;
     try {
         const userExists = await User.findOne({ email });
@@ -55,4 +55,4 @@ const loginUser = async (req, res) => {
 };
 
 
-module.exports = { registerUser, loginUser };
+module.exports = { signupUser, loginUser };
