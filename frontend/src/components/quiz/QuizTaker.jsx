@@ -79,10 +79,8 @@ const QuizTaker = () => {
       const timer = setInterval(() => {
         setTimeRemaining(prev => {
           if (prev <= 1) {
-              const handleTimeUp = () => {
-                alert('Time is up! Submitting your quiz automatically.');
-                submitQuiz();
-              };
+            alert('Time is up! Submitting your quiz automatically.');
+            submitQuiz();
             return 0;
           }
           return prev - 1;

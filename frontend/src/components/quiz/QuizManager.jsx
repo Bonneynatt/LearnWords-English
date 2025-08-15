@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosConfig';
 import QuizCreator from './QuizCreator';
@@ -19,11 +19,7 @@ const QuizManager = () => {
   });
   const navigate = useNavigate();
 
-  useEffect(() => {
-      fetchData();
-  }, [activeTab, filters, fetchData]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       setError('');
@@ -40,9 +36,13 @@ const QuizManager = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTab, fetchAvailableQuizzes, fetchMyQuizzes, fetchMyAttempts]);
 
-  const fetchAvailableQuizzes = async () => {
+  useEffect(() => {
+      fetchData();
+  }, [activeTab, filters, fetchData]);
+
+  const fetchAvailableQuizzes = useCallback(async () => {
     const params = new URLSearchParams();
     if (filters.difficulty !== 'all') params.append('difficulty', filters.difficulty);
     if (filters.category !== 'all') params.append('category', filters.category);
@@ -50,17 +50,17 @@ const QuizManager = () => {
 
     const response = await axiosInstance.get(`/quiz?${params.toString()}`);
     setQuizzes(response.data.data);
-  };
+  }, [filters]);
 
-  const fetchMyQuizzes = async () => {
+  const fetchMyQuizzes = useCallback(async () => {
     const response = await axiosInstance.get('/quiz/my/quizzes');
     setMyQuizzes(response.data.data);
-  };
+  }, []);
 
-  const fetchMyAttempts = async () => {
+  const fetchMyAttempts = useCallback(async () => {
     const response = await axiosInstance.get('/quiz/my/attempts');
     setMyAttempts(response.data.data);
-  };
+  }, []);
 
   const handleCreateQuiz = async (quizData) => {
     try {
