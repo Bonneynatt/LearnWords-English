@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosConfig';
 
@@ -110,7 +110,7 @@ const QuizTaker = () => {
     setShowConfirm(true);
   };
 
-  const submitQuiz = async () => {
+  const submitQuiz = useCallback(async () => {
     try {
       setSubmitting(true);
       
@@ -129,7 +129,7 @@ const QuizTaker = () => {
     } finally {
       setSubmitting(false);
     }
-  };
+  }, [quiz, timeRemaining, attempt]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
