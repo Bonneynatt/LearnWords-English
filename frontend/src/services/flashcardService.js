@@ -72,4 +72,5 @@ class FlashcardService {
   }
 }
 
-export default new FlashcardService();
+const flashcardService = new FlashcardService();
+export default flashcardService;

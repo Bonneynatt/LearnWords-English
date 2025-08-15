@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import flashcardService from '../../services/flashcardService';
 
 const FlashcardViewer = () => {
@@ -16,7 +16,7 @@ const FlashcardViewer = () => {
 
   useEffect(() => {
     loadFlashcards();
-  }, [studyMode, filters]);
+  }, [studyMode, filters, loadFlashcards]);
 
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -30,9 +30,9 @@ const FlashcardViewer = () => {
 
     document.addEventListener('keydown', handleKeyPress);
     return () => document.removeEventListener('keydown', handleKeyPress);
-  }, [flashcards.length, currentIndex, showAnswer]);
+  }, [prevCard, nextCard, toggleAnswer]);
 
-  const loadFlashcards = async () => {
+  const loadFlashcards = useCallback(async () => {
     try {
       setLoading(true);
       let response;
@@ -74,21 +74,21 @@ const FlashcardViewer = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [studyMode, filters]);
 
-  const nextCard = () => {
+  const nextCard = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % flashcards.length);
     setShowAnswer(false);
-  };
+  }, [flashcards.length]);
 
-  const prevCard = () => {
+  const prevCard = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + flashcards.length) % flashcards.length);
     setShowAnswer(false);
-  };
+  }, [flashcards.length]);
 
-  const toggleAnswer = () => {
+  const toggleAnswer = useCallback(() => {
     setShowAnswer(!showAnswer);
-  };
+  }, [showAnswer]);
 
   const currentCard = flashcards[currentIndex];
 
