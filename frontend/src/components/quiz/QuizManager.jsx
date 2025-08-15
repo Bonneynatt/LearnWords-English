@@ -19,6 +19,26 @@ const QuizManager = () => {
   });
   const navigate = useNavigate();
 
+  const fetchAvailableQuizzes = useCallback(async () => {
+    const params = new URLSearchParams();
+    if (filters.difficulty !== 'all') params.append('difficulty', filters.difficulty);
+    if (filters.category !== 'all') params.append('category', filters.category);
+    if (filters.search) params.append('search', filters.search);
+
+    const response = await axiosInstance.get(`/quiz?${params.toString()}`);
+    setQuizzes(response.data.data);
+  }, [filters]);
+
+  const fetchMyQuizzes = useCallback(async () => {
+    const response = await axiosInstance.get('/quiz/my/quizzes');
+    setMyQuizzes(response.data.data);
+  }, []);
+
+  const fetchMyAttempts = useCallback(async () => {
+    const response = await axiosInstance.get('/quiz/my/attempts');
+    setMyAttempts(response.data.data);
+  }, []);
+
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
@@ -41,26 +61,6 @@ const QuizManager = () => {
   useEffect(() => {
       fetchData();
   }, [activeTab, filters, fetchData]);
-
-  const fetchAvailableQuizzes = useCallback(async () => {
-    const params = new URLSearchParams();
-    if (filters.difficulty !== 'all') params.append('difficulty', filters.difficulty);
-    if (filters.category !== 'all') params.append('category', filters.category);
-    if (filters.search) params.append('search', filters.search);
-
-    const response = await axiosInstance.get(`/quiz?${params.toString()}`);
-    setQuizzes(response.data.data);
-  }, [filters]);
-
-  const fetchMyQuizzes = useCallback(async () => {
-    const response = await axiosInstance.get('/quiz/my/quizzes');
-    setMyQuizzes(response.data.data);
-  }, []);
-
-  const fetchMyAttempts = useCallback(async () => {
-    const response = await axiosInstance.get('/quiz/my/attempts');
-    setMyAttempts(response.data.data);
-  }, []);
 
   const handleCreateQuiz = async (quizData) => {
     try {
