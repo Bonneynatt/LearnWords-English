@@ -20,10 +20,7 @@ const QuizManager = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchData();
-  }, [activeTab, filters]);
-
-  const fetchData = async () => {
+    const fetchData = async () => {
     try {
       setLoading(true);
       setError('');
@@ -41,6 +38,9 @@ const QuizManager = () => {
       setLoading(false);
     }
   };
+  }, [activeTab, filters]);
+
+  
 
   const fetchAvailableQuizzes = async () => {
     const params = new URLSearchParams();

@@ -16,10 +16,7 @@ const FlashcardManager = () => {
   });
 
   useEffect(() => {
-    fetchFlashcards();
-  }, [filters]);
-
-  const fetchFlashcards = async () => {
+    const fetchFlashcards = async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -34,7 +31,10 @@ const FlashcardManager = () => {
     } finally {
       setLoading(false);
     }
-  };
+    };
+  }, [filters]);
+
+  
 
   const handleCreateCard = async (cardData) => {
     try {

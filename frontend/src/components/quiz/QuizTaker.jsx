@@ -19,26 +19,7 @@ const QuizTaker = () => {
   const [results, setResults] = useState(null);
 
   useEffect(() => {
-    fetchQuizAndStartAttempt();
-  }, [quizId]);
-
-  useEffect(() => {
-    if (timeRemaining > 0 && !quizCompleted) {
-      const timer = setInterval(() => {
-        setTimeRemaining(prev => {
-          if (prev <= 1) {
-            handleTimeUp();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }
-  }, [timeRemaining, quizCompleted]);
-
-  const fetchQuizAndStartAttempt = async () => {
+    const fetchQuizAndStartAttempt = async () => {
     try {
       setLoading(true);
       
@@ -69,6 +50,28 @@ const QuizTaker = () => {
       setLoading(false);
     }
   };
+  }, [quizId]);
+
+  useEffect(() => {
+    if (timeRemaining > 0 && !quizCompleted) {
+      const timer = setInterval(() => {
+        setTimeRemaining(prev => {
+          if (prev <= 1) {
+              const handleTimeUp = () => {
+                alert('Time is up! Submitting your quiz automatically.');
+                submitQuiz();
+              };
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [timeRemaining, quizCompleted]);
+
+  
 
   const handleAnswerSelect = async (questionIndex, optionIndex) => {
     const newAnswers = { ...selectedAnswers, [questionIndex]: optionIndex };
@@ -101,10 +104,7 @@ const QuizTaker = () => {
     setCurrentQuestionIndex(questionIndex);
   };
 
-  const handleTimeUp = () => {
-    alert('Time is up! Submitting your quiz automatically.');
-    submitQuiz();
-  };
+  
 
   const handleSubmitClick = () => {
     setShowConfirm(true);
