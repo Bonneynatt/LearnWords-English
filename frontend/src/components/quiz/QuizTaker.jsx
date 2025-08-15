@@ -19,7 +19,10 @@ const QuizTaker = () => {
   const [results, setResults] = useState(null);
 
   useEffect(() => {
-    const fetchQuizAndStartAttempt = async () => {
+      fetchQuizAndStartAttempt()
+  }, [quizId, fetchQuizAndStartAttempt]);
+  
+  const fetchQuizAndStartAttempt = async () => {
     try {
       setLoading(true);
       
@@ -50,8 +53,6 @@ const QuizTaker = () => {
       setLoading(false);
     }
   };
-  }, [quizId]);
-
   const submitQuiz = useCallback(async () => {
     try {
       setSubmitting(true);
