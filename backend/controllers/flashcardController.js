@@ -1,12 +1,9 @@
-const express = require('express');
-const router = express.Router();
 const Flashcard = require('../models/Flashcard');
-const { protect } = require('../middleware/authMiddleware');
 
 // @desc    Get all flashcards
 // @route   GET /api/flashcards
 // @access  Public/Private
-router.get('/', async (req, res) => {
+const getFlashcards = async (req, res) => {
     try {
         const { difficulty, category, search, limit = 20, page = 1 } = req.query;
         
@@ -55,12 +52,12 @@ router.get('/', async (req, res) => {
             message: 'Server error while fetching flashcards'
         });
     }
-});
+};
 
 // @desc    Get single flashcard
 // @route   GET /api/flashcards/:id
 // @access  Public
-router.get('/:id', async (req, res) => {
+const getFlashcard = async (req, res) => {
     try {
         const flashcard = await Flashcard.findById(req.params.id)
             .populate('createdBy', 'name email');
@@ -89,12 +86,12 @@ router.get('/:id', async (req, res) => {
             message: 'Server error while fetching flashcard'
         });
     }
-});
+};
 
 // @desc    Create new flashcard
 // @route   POST /api/flashcards
 // @access  Private
-router.post('/', protect, async (req, res) => {
+const createFlashcard = async (req, res) => {
     try {
         const flashcardData = {
             ...req.body,
@@ -127,12 +124,12 @@ router.post('/', protect, async (req, res) => {
             message: 'Server error while creating flashcard'
         });
     }
-});
+};
 
 // @desc    Update flashcard
 // @route   PUT /api/flashcards/:id
 // @access  Private
-router.put('/:id', protect, async (req, res) => {
+const updateFlashcard = async (req, res) => {
     try {
         const flashcard = await Flashcard.findById(req.params.id);
         
@@ -179,12 +176,12 @@ router.put('/:id', protect, async (req, res) => {
             message: 'Server error while updating flashcard'
         });
     }
-});
+};
 
 // @desc    Delete flashcard
 // @route   DELETE /api/flashcards/:id
 // @access  Private
-router.delete('/:id', protect, async (req, res) => {
+const deleteFlashcard = async (req, res) => {
     try {
         const flashcard = await Flashcard.findById(req.params.id);
         
@@ -216,12 +213,12 @@ router.delete('/:id', protect, async (req, res) => {
             message: 'Server error while deleting flashcard'
         });
     }
-});
+};
 
 // @desc    Get flashcards by difficulty
 // @route   GET /api/flashcards/difficulty/:difficulty
 // @access  Public
-router.get('/difficulty/:difficulty', async (req, res) => {
+const getFlashcardsByDifficulty = async (req, res) => {
     try {
         const { difficulty } = req.params;
         const validDifficulties = ['beginner', 'intermediate', 'advanced'];
@@ -248,12 +245,12 @@ router.get('/difficulty/:difficulty', async (req, res) => {
             message: 'Server error while fetching flashcards'
         });
     }
-});
+};
 
 // @desc    Get flashcards by category
 // @route   GET /api/flashcards/category/:category
 // @access  Public
-router.get('/category/:category', async (req, res) => {
+const getFlashcardsByCategory = async (req, res) => {
     try {
         const { category } = req.params;
         
@@ -272,12 +269,12 @@ router.get('/category/:category', async (req, res) => {
             message: 'Server error while fetching flashcards'
         });
     }
-});
+};
 
 // @desc    Get my flashcards
 // @route   GET /api/flashcards/my/cards
 // @access  Private
-router.get('/my/cards', protect, async (req, res) => {
+const getMyFlashcards = async (req, res) => {
     try {
         const flashcards = await Flashcard.find({ createdBy: req.user.id })
             .sort({ createdAt: -1 });
@@ -294,12 +291,12 @@ router.get('/my/cards', protect, async (req, res) => {
             message: 'Server error while fetching your flashcards'
         });
     }
-});
+};
 
 // @desc    Get random flashcards for study
 // @route   GET /api/flashcards/study/random
 // @access  Public
-router.get('/study/random', async (req, res) => {
+const getRandomFlashcards = async (req, res) => {
     try {
         const { limit = 10, difficulty, category } = req.query;
         
@@ -340,6 +337,16 @@ router.get('/study/random', async (req, res) => {
             message: 'Server error while fetching random flashcards'
         });
     }
-});
+};
 
-module.exports = router;
+module.exports = {
+    getFlashcards,
+    getFlashcard,
+    createFlashcard,
+    updateFlashcard,
+    deleteFlashcard,
+    getFlashcardsByDifficulty,
+    getFlashcardsByCategory,
+    getMyFlashcards,
+    getRandomFlashcards
+};
