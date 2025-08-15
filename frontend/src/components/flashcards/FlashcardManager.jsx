@@ -22,10 +22,11 @@ const FlashcardManager = () => {
       if (filters.category !== 'all') params.append('category', filters.category);
       if (filters.search) params.append('search', filters.search);
 
-      const response = await axiosInstance.get(`/flashcards?${params.toString()}`);
+      const response = await axiosInstance.get(`/flashcards/my/cards`);
       setFlashcards(response.data.data);
     } catch (error) {
       setError('Failed to fetch flashcards');
+      console.error('Fetch error:', error);
     } finally {
       setLoading(false);
     }
@@ -40,8 +41,10 @@ const FlashcardManager = () => {
       const response = await axiosInstance.post('/flashcards', cardData);
       setFlashcards([response.data.data, ...flashcards]);
       setShowForm(false);
+      setError(''); // Clear any previous errors
     } catch (error) {
-      setError('Failed to create flashcard');
+      console.error('Create flashcard error:', error);
+      setError(error.response?.data?.message || 'Failed to create flashcard');
     }
   };
 
