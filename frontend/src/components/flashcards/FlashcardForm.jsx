@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+//THis is for flashcards
+
 const FlashcardForm = ({ initialData, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     englishWord: '',
