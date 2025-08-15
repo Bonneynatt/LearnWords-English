@@ -15,17 +15,16 @@ const signupUser = async (req, res) => {
 
         const user = await User.create({ name, email, password, university, address });
         res.status(201).json({ 
-            success: true,
+            // success: true,
             token: generateToken(user.id),
-            user: { 
-                id: user.id, 
-                name: user.name, 
-                email: user.email, 
-                university: user.university, 
-                address: user.address 
-            } 
+            id: user.id, 
+            name: user.name, 
+            email: user.email, 
+            university: user.university, 
+            address: user.address 
         });
     } catch (error) {
+        console.error(error.message);
         res.status(500).json({ success: false, message: error.message });
     }
 };

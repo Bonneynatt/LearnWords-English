@@ -12,7 +12,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Signup />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/flashcards" element={<FlashcardManager />} />
         <Route path="/quiz" element={<QuizManager />} />
         <Route path="/quiz/:quizId/take" element={<QuizTaker />} />
