@@ -36,9 +36,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (userData) => {
+  const signup = async (userData) => {
     try {
-      const response = await axiosInstance.post('/auth/register', userData);
+      const response = await axiosInstance.post('/auth/signup', userData);
       const { token, user: newUser } = response.data;
       
       localStorage.setItem('token', token);
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     login,
-    register,
+    signup,
     logout,
     loading,
     isAuthenticated: !!user

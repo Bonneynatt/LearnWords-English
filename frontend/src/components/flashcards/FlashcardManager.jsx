@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../axiosConfig';
 import FlashcardForm from './FlashcardForm';
-import FlashcardViewer from './FlashcardViewer';
 
 const FlashcardManager = () => {
   const [flashcards, setFlashcards] = useState([]);
@@ -15,11 +14,7 @@ const FlashcardManager = () => {
     search: ''
   });
 
-  useEffect(() => {
-    fetchFlashcards();
-  }, [filters]);
-
-  const fetchFlashcards = async () => {
+  const fetchFlashcards = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -34,7 +29,11 @@ const FlashcardManager = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => {
+    fetchFlashcards();
+  }, [fetchFlashcards]);
 
   const handleCreateCard = async (cardData) => {
     try {
