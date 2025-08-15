@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+//This is sign up page for the app
+
 const Signup = () => {
   const [formData, setFormData] = useState({ 
     name: '', 
@@ -14,7 +16,7 @@ const Signup = () => {
   const [error, setError] = useState('');
   const [validationErrors, setValidationErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
+  const { signup } = useAuth();
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
@@ -86,7 +88,7 @@ const Signup = () => {
       return;
     }
 
-    const result = await register(formData);
+    const result = await signup(formData);
     
     if (result.success) {
       navigate('/flashcards');

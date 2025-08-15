@@ -21,6 +21,8 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
+    - name: Change CI Config  
+      run: echo "CI = false" >> $GITHUB_ENV
 
     # Set up Node.js
     - name: Setup Node.js
@@ -48,6 +50,7 @@ jobs:
        npm install --global yarn
        yarn --version
        yarn install
+       pm2 delete all || true
       
     # Install dependencies for frontend
     - name: Install Frontend Dependencies
@@ -76,6 +79,8 @@ jobs:
         touch .env
         echo "${{ secrets.PROD }}" > .env
 
-    - run: pm2 start all
+    - run: pm2 start "npm run start" --name="backend"
+
+    - run: pm2 serve build/ 3000 --name "frontend" --spa
 
     - run: pm2 restart all

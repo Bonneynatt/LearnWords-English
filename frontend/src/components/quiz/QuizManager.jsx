@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import axiosInstance from '../../axiosConfig';
 import QuizCreator from './QuizCreator';
 
 const QuizManager = () => {
+  const { isAuthenticated } = useAuth();
   const [quizzes, setQuizzes] = useState([]);
   const [myQuizzes, setMyQuizzes] = useState([]);
   const [myAttempts, setMyAttempts] = useState([]);
@@ -19,11 +21,33 @@ const QuizManager = () => {
   });
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchData();
-  }, [activeTab, filters]);
+  const fetchAvailableQuizzes = useCallback(async () => {
+    const params = new URLSearchParams();
+    if (filters.difficulty !== 'all') params.append('difficulty', filters.difficulty);
+    if (filters.category !== 'all') params.append('category', filters.category);
+    if (filters.search) params.append('search', filters.search);
 
-  const fetchData = async () => {
+    const response = await axiosInstance.get(`/api/quiz?${params.toString()}`);
+    setQuizzes(response.data.data);
+  }, [filters]);
+
+  const fetchMyQuizzes = useCallback(async () => {
+    if (!isAuthenticated) {
+      throw new Error('Please login to view your quizzes');
+    }
+    const response = await axiosInstance.get('/api/quiz/my/quizzes');
+    setMyQuizzes(response.data.data);
+  }, [isAuthenticated]);
+
+  const fetchMyAttempts = useCallback(async () => {
+    if (!isAuthenticated) {
+      throw new Error('Please login to view your attempts');
+    }
+    const response = await axiosInstance.get('/api/quiz/my/attempts');
+    setMyAttempts(response.data.data);
+  }, [isAuthenticated]);
+
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       setError('');
@@ -36,63 +60,55 @@ const QuizManager = () => {
         await fetchMyAttempts();
       }
     } catch (error) {
-      setError('Failed to fetch data');
+      console.error('Fetch error:', error);
+      if (error.response?.status === 401) {
+        setError('Please login to access this section');
+      } else {
+        setError(error.message || error.response?.data?.message || 'Failed to fetch data');
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTab, fetchAvailableQuizzes, fetchMyQuizzes, fetchMyAttempts]);
 
-  const fetchAvailableQuizzes = async () => {
-    const params = new URLSearchParams();
-    if (filters.difficulty !== 'all') params.append('difficulty', filters.difficulty);
-    if (filters.category !== 'all') params.append('category', filters.category);
-    if (filters.search) params.append('search', filters.search);
-
-    const response = await axiosInstance.get(`/quiz?${params.toString()}`);
-    setQuizzes(response.data.data);
-  };
-
-  const fetchMyQuizzes = async () => {
-    const response = await axiosInstance.get('/quiz/my/quizzes');
-    setMyQuizzes(response.data.data);
-  };
-
-  const fetchMyAttempts = async () => {
-    const response = await axiosInstance.get('/quiz/my/attempts');
-    setMyAttempts(response.data.data);
-  };
+  useEffect(() => {
+      fetchData();
+  }, [activeTab, filters, fetchData]);
 
   const handleCreateQuiz = async (quizData) => {
     try {
-      const response = await axiosInstance.post('/quiz', quizData);
+      const response = await axiosInstance.post('/api/quiz', quizData);
       setMyQuizzes([response.data.data, ...myQuizzes]);
       setShowCreator(false);
       setActiveTab('my-quizzes');
     } catch (error) {
-      setError('Failed to create quiz');
+      console.error('Create quiz error:', error);
+      setError(error.response?.data?.message || 'Failed to create quiz');
     }
   };
 
   const handleUpdateQuiz = async (quizData) => {
     try {
-      const response = await axiosInstance.put(`/quiz/${editingQuiz._id}`, quizData);
+      const response = await axiosInstance.put(`/api/quiz/${editingQuiz._id}`, quizData);
       setMyQuizzes(myQuizzes.map(quiz => 
         quiz._id === editingQuiz._id ? response.data.data : quiz
       ));
       setEditingQuiz(null);
       setShowCreator(false);
     } catch (error) {
-      setError('Failed to update quiz');
+      console.error('Update quiz error:', error);
+      setError(error.response?.data?.message || 'Failed to update quiz');
     }
   };
 
   const handleDeleteQuiz = async (quizId) => {
     if (window.confirm('Are you sure you want to delete this quiz?')) {
       try {
-        await axiosInstance.delete(`/quiz/${quizId}`);
+        await axiosInstance.delete(`/api/quiz/${quizId}`);
         setMyQuizzes(myQuizzes.filter(quiz => quiz._id !== quizId));
       } catch (error) {
-        setError('Failed to delete quiz');
+        console.error('Delete quiz error:', error);
+        setError(error.response?.data?.message || 'Failed to delete quiz');
       }
     }
   };
@@ -128,6 +144,20 @@ const QuizManager = () => {
   };
 
   if (loading) return <div className="text-center p-8">Loading quizzes...</div>;
+
+  // Show login prompt for protected tabs when not authenticated
+  if (!isAuthenticated && (activeTab === 'my-quizzes' || activeTab === 'my-attempts')) {
+    return (
+      <div className="container mx-auto p-4 text-center">
+        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+          Please login to access this section
+        </div>
+        <a href="/login" className="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700">
+          Go to Login
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4">

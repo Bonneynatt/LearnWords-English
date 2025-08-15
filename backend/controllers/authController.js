@@ -7,11 +7,11 @@ const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
-const registerUser = async (req, res) => {
+const signupUser = async (req, res) => {
     const { name, email, password, university, address } = req.body;
     try {
         const userExists = await User.findOne({ email });
-        if (userExists) return res.status(400).json({ message: 'User already exists' });
+        if (userExists) return res.status(400).json({ success: false, message: 'User already exists' });
 
         const user = await User.create({ name, email, password, university, address });
         res.status(201).json({ 
@@ -23,9 +23,10 @@ const registerUser = async (req, res) => {
                 email: user.email, 
                 university: user.university, 
                 address: user.address 
-            } 
+            }
         });
     } catch (error) {
+        console.error(error.message);
         res.status(500).json({ success: false, message: error.message });
     }
 };
@@ -55,4 +56,4 @@ const loginUser = async (req, res) => {
 };
 
 
-module.exports = { registerUser, loginUser };
+module.exports = { signupUser, loginUser };

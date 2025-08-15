@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
-import axiosInstance from '../../axiosConfig';
+import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import flashcardService from '../../services/flashcardService';
 import FlashcardForm from './FlashcardForm';
-import FlashcardViewer from './FlashcardViewer';
 
 const FlashcardManager = () => {
+  const { isAuthenticated } = useAuth();
   const [flashcards, setFlashcards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -15,42 +16,69 @@ const FlashcardManager = () => {
     search: ''
   });
 
-  useEffect(() => {
-    fetchFlashcards();
-  }, [filters]);
+  const fetchFlashcards = useCallback(async () => {
+    if (!isAuthenticated) {
+      setLoading(false);
+      setError('Please login to view your flashcards');
+      return;
+    }
 
-  const fetchFlashcards = async () => {
     try {
       setLoading(true);
-      const params = new URLSearchParams();
-      if (filters.difficulty !== 'all') params.append('difficulty', filters.difficulty);
-      if (filters.category !== 'all') params.append('category', filters.category);
-      if (filters.search) params.append('search', filters.search);
+      setError('');
+      const response = await flashcardService.getMyFlashcards();
+      let filteredCards = response.data;
 
-      const response = await axiosInstance.get(`/flashcards?${params.toString()}`);
-      setFlashcards(response.data.data);
+      // Apply client-side filtering since the my/cards endpoint doesn't support query params
+      if (filters.difficulty !== 'all') {
+        filteredCards = filteredCards.filter(card => card.difficulty === filters.difficulty);
+      }
+      if (filters.category !== 'all') {
+        filteredCards = filteredCards.filter(card => card.category === filters.category);
+      }
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase();
+        filteredCards = filteredCards.filter(card => 
+          card.englishWord.toLowerCase().includes(searchLower) ||
+          card.thaiMeaning.toLowerCase().includes(searchLower) ||
+          card.category.toLowerCase().includes(searchLower)
+        );
+      }
+
+      setFlashcards(filteredCards);
     } catch (error) {
-      setError('Failed to fetch flashcards');
+      console.error('Fetch error:', error);
+      if (error.response?.status === 401) {
+        setError('Please login to view your flashcards');
+      } else {
+        setError(error.response?.data?.message || 'Failed to fetch flashcards');
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters, isAuthenticated]);
+
+  useEffect(() => {
+    fetchFlashcards();
+  }, [fetchFlashcards]);
 
   const handleCreateCard = async (cardData) => {
     try {
-      const response = await axiosInstance.post('/flashcards', cardData);
-      setFlashcards([response.data.data, ...flashcards]);
+      const response = await flashcardService.createFlashcard(cardData);
+      setFlashcards([response.data, ...flashcards]);
       setShowForm(false);
+      setError('');
     } catch (error) {
-      setError('Failed to create flashcard');
+      console.error('Create flashcard error:', error);
+      setError(error.response?.data?.message || 'Failed to create flashcard');
     }
   };
 
   const handleUpdateCard = async (cardData) => {
     try {
-      const response = await axiosInstance.put(`/flashcards/${editingCard._id}`, cardData);
+      const response = await flashcardService.updateFlashcard(editingCard._id, cardData);
       setFlashcards(flashcards.map(card => 
-        card._id === editingCard._id ? response.data.data : card
+        card._id === editingCard._id ? response.data : card
       ));
       setEditingCard(null);
       setShowForm(false);
@@ -62,7 +90,7 @@ const FlashcardManager = () => {
   const handleDeleteCard = async (cardId) => {
     if (window.confirm('Are you sure you want to delete this flashcard?')) {
       try {
-        await axiosInstance.delete(`/flashcards/${cardId}`);
+        await flashcardService.deleteFlashcard(cardId);
         setFlashcards(flashcards.filter(card => card._id !== cardId));
       } catch (error) {
         setError('Failed to delete flashcard');
@@ -76,6 +104,19 @@ const FlashcardManager = () => {
   };
 
   if (loading) return <div className="text-center p-4">Loading flashcards...</div>;
+
+  if (!isAuthenticated) {
+    return (
+      <div className="container mx-auto p-4 text-center">
+        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+          Please login to manage your flashcards
+        </div>
+        <a href="/login" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+          Go to Login
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4">

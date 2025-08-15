@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosConfig';
 
@@ -18,37 +18,17 @@ const QuizTaker = () => {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [results, setResults] = useState(null);
 
-  useEffect(() => {
-    fetchQuizAndStartAttempt();
-  }, [quizId]);
-
-  useEffect(() => {
-    if (timeRemaining > 0 && !quizCompleted) {
-      const timer = setInterval(() => {
-        setTimeRemaining(prev => {
-          if (prev <= 1) {
-            handleTimeUp();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }
-  }, [timeRemaining, quizCompleted]);
-
-  const fetchQuizAndStartAttempt = async () => {
+  const fetchQuizAndStartAttempt = useCallback(async () => {
     try {
       setLoading(true);
       
       // Fetch quiz details
-      const quizResponse = await axiosInstance.get(`/quiz/${quizId}`);
+      const quizResponse = await axiosInstance.get(`/api/quiz/${quizId}`);
       const quizData = quizResponse.data.data;
       setQuiz(quizData);
       
       // Start quiz attempt
-      const attemptResponse = await axiosInstance.post(`/quiz/${quizId}/attempt`);
+      const attemptResponse = await axiosInstance.post(`/api/quiz/${quizId}/attempt`);
       const attemptData = attemptResponse.data.data;
       setAttempt(attemptData);
       
@@ -68,7 +48,50 @@ const QuizTaker = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [quizId]);
+  
+  useEffect(() => {
+    fetchQuizAndStartAttempt();
+  }, [fetchQuizAndStartAttempt]);
+  const submitQuiz = useCallback(async () => {
+    try {
+      setSubmitting(true);
+      
+      const timeSpent = (quiz.timeLimit * 60) - timeRemaining;
+      const response = await axiosInstance.post(`/api/quiz/attempt/${attempt._id}/complete`, {
+        timeSpent
+      });
+      
+      setResults(response.data.data);
+      setQuizCompleted(true);
+      setShowConfirm(false);
+      
+    } catch (error) {
+      setError('Failed to submit quiz');
+      console.error('Error:', error);
+    } finally {
+      setSubmitting(false);
+    }
+  }, [quiz, timeRemaining, attempt]);
+
+  useEffect(() => {
+    if (timeRemaining > 0 && !quizCompleted) {
+      const timer = setInterval(() => {
+        setTimeRemaining(prev => {
+          if (prev <= 1) {
+            alert('Time is up! Submitting your quiz automatically.');
+            submitQuiz();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [timeRemaining, quizCompleted, submitQuiz]);
+
+  
 
   const handleAnswerSelect = async (questionIndex, optionIndex) => {
     const newAnswers = { ...selectedAnswers, [questionIndex]: optionIndex };
@@ -76,7 +99,7 @@ const QuizTaker = () => {
     
     // Submit answer to backend immediately
     try {
-      await axiosInstance.post(`/quiz/attempt/${attempt._id}/answer`, {
+      await axiosInstance.post(`/api/quiz/attempt/${attempt._id}/answer`, {
         questionIndex,
         selectedOption: optionIndex
       });
@@ -101,34 +124,10 @@ const QuizTaker = () => {
     setCurrentQuestionIndex(questionIndex);
   };
 
-  const handleTimeUp = () => {
-    alert('Time is up! Submitting your quiz automatically.');
-    submitQuiz();
-  };
+  
 
   const handleSubmitClick = () => {
     setShowConfirm(true);
-  };
-
-  const submitQuiz = async () => {
-    try {
-      setSubmitting(true);
-      
-      const timeSpent = (quiz.timeLimit * 60) - timeRemaining;
-      const response = await axiosInstance.post(`/quiz/attempt/${attempt._id}/complete`, {
-        timeSpent
-      });
-      
-      setResults(response.data.data);
-      setQuizCompleted(true);
-      setShowConfirm(false);
-      
-    } catch (error) {
-      setError('Failed to submit quiz');
-      console.error('Error:', error);
-    } finally {
-      setSubmitting(false);
-    }
   };
 
   const formatTime = (seconds) => {

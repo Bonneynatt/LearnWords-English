@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+//This is for flashcards
+
 const FlashcardForm = ({ initialData, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     englishWord: '',
@@ -188,6 +190,7 @@ const FlashcardForm = ({ initialData, onSubmit, onCancel }) => {
                 onClick={() => handleRemoveTag(tag)}
                 className="ml-1 text-blue-600 hover:text-blue-800"
               >
+                ×
               </button>
             </span>
           ))}
