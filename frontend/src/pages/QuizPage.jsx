@@ -1,5 +1,5 @@
 import QuizManager from '../components/quiz/QuizManager';
-//This is QuizPage
+//This is QuizPage.
 const QuizPage = () => {
   return <QuizManager />;
 };
