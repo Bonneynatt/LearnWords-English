@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 
+// This login-page is completed
+// committed to git
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
@@ -27,9 +29,9 @@ const Login = () => {
   return (
     <div className="max-w-md mx-auto mt-20">
       <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded">
-        <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">
+        <h1 className="text-2xl font-bold mb-4 text-center text-blue-600">
           LearnWords English - Login
-        </h2>
+        </h1>
         
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">

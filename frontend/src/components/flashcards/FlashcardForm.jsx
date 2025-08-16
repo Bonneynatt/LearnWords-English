@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-//THis is for flashcards
+//This is FlashcardForm.jsx
 
 const FlashcardForm = ({ initialData, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -190,6 +190,7 @@ const FlashcardForm = ({ initialData, onSubmit, onCancel }) => {
                 onClick={() => handleRemoveTag(tag)}
                 className="ml-1 text-blue-600 hover:text-blue-800"
               >
+                ×
               </button>
             </span>
           ))}
