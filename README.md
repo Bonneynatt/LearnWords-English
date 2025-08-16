@@ -1,94 +1,91 @@
 
 **Assessment 1 (Total Marks **20**)**
 
-Assignment: **Software requirements analysis and design (**Full-Stack CRUD Application Development with DevOps Practices**)**
+“Software Requirements Analysis and Design: LearnWords-English — A Full-Stack CRUD Application with DevOps Practices”
 
 
 ---
+**Description**
+
+LearnWords-English is an innovative language-learning platform that allows users (Thai student) to improve their English vocabulary through interactive and engaging methods. Also, it offers an accessible way to build vocabulary and confidence. 
+
+The system incorporates flashcards, quizzes, and progress tracking to inform users to know how many quizzes which they have done. Users can test their comprehension right away, practice words in various contexts, and use spaced repetition techniques to gradually reinforce their knowledge.
+
+In addition, this application provides scalability and flexibility for user accounts, quiz results, and flashcards. For safe and customised learning, user management and authentication are put into place. LearnWords-English ultimate objective is to give students of all skill levels an approachable and inspiring tool that will allow them to confidently assess their progress and effectively increase their vocabulary.
+
 
 **Objective**
 
-You have been provided with a starter project that includes user authentication using Node.js, React.js, and MongoDB. Your task is to extend this application by implementing CRUD (Create, Read, Update, Delete) operations of different featuresfor a real-world application of your choice, while following industry best practices such as: 
+This project has been created and included user authentication using Node.js, React.js, and MongoDB, and extended it into LearnWords-English, a full-stack application that helps users build English vocabulary. It is implemented CRUD operations for flashcards and quizzes, while managing tasks in Jira with user stories and sprints, creating SysML diagrams (Requirement, BDD, Parametric) Development was tracked with GitHub, using feature branches, commits linked to Jira issues, and pull requests. For deployment, CI/CD with GitHub Actions have been set up in order to managed backend processes with PM2, and hosted the app on AWS EC2 with Nginx.
 
-* **Project Management with JIRA**
-* **Requirement Diagram**, **Block Definition Diagram (**BDD), Parametric Diagram using**SysML**
-* **Version Control using GitHub**
-* **CI/CD Integration for Automated Deployment**
+---
+Main features
+
+1.User Authentication (Signup, Login, and Logout)
+2.Flashcards Management (CRUD)
+- Create: Add new flashcards with word, definition, and example
+- Read: Browse and search existing flashcards
+- Update: Edit flashcard details
+- Delete: Remove flashcards from collection
+3.Quiz System (CRUD)
+- Create: Generate quizzes from flashcards
+- Read: Take quizzes with multiple-choice or input answers
+- Update: Manage/edit quiz questions
+- Delete: Remove unwanted quizzes
+4.Bug Tracking and Resolution
 
 ---
 
-**GitHub link of the starter project: **[https://github.com/rajuiit/sdlapps](https://github.com/rajuiit/sdlapps)
+**GitHub link of the starter project: **[https://github.com/Bonneynatt/LearnWords-English} 
 
 ---
 
-**Requirement**
+Requirements – LearnWords-English
 
-1. **Choose a Real-World Application**
+1. Real-World Application
+- LearnWords-English: a full-stack web app for learning English through flashcards and quizzes, supporting full CRUD functionality.
 
-We will send you an email to choose a Real-World project. If you face any difficulties in choosing your project, please contact your tutor.
+2. Design & Project Management
 
-2. **Project Design with SysML and Project Management with JIRA**
+- SysML diagrams: Requirements, BDD, Parametric (for quiz scoring & flashcard review).
 
-* Draw a requirements diagram, Block Definition Diagram (BDD), and Parametric Diagram based on your project (Connect all functional features).
-* Create a JIRA project and define:
-  * Epic
-  * User Stories (features required in your app)
-  * Child issues or Subtasks (breaking down development work)
-  * Sprint Implementation (organizing work into milestones)
-* Provide your JIRA board URL in the project README.
+- Managed in Jira with Epics, User Stories, Subtasks, and Sprints.
 
-**3. Backend Development (Node.js + Express + MongoDB)**
+- Linked Jira issues to GitHub commits/branches.
 
-* Set up and configure the MongoDB database connection.
-* Implement various backend functions for handling application data.Ensure that all functions are compatible with an Application Programming Interface (API) structure(Follow existing patterns used in the Task Manager App where applicable).
-* Implement CRUD operations forcreating, reading, updating, and deleting records for each functionality.
+3. Backend (Node.js + Express + MongoDB)
 
-4. **Frontend Development (React.js)**
+- REST API with CRUD for Users, Flashcards, Quizzes.
 
-* Create a user-friendly interface to interact with your API endpoint (Follow task manager app).
-* Implement different forms for adding, updating, and deleting records.
-* Display data using tables, cards, or lists (Follow how we showed data in task manager app, try to implement better visualization for the frontend.)
+- Mongoose for schema and validation.
 
-**5. Authentication & Authorization** (Prerequisite Task)
+4. Frontend (React.js)
 
-* Ensure only authenticated users can access and perform CRUD operations. (Already developed in your project)
-* Use JWT (JSON Web Tokens) for user authentication (Use the task manager one from .env file).
+- User-friendly UI with Browse, Study, and Manage modes.
 
-**6. GitHub Version Control & Branching Strategy**
+- Forms for adding/editing, lists/cards for displaying data.
 
-* Use GitHub for version control and maintain:
-* main branch (stable production-ready code)
-* Feature branches for each new feature
-* Follow proper commit messages and pull request (PR) for code reviews.
+- AuthContext + Axios for API integration.
 
-**7. CI/CD Pipeline Setup**
+5. Authentication & Authorization
 
-* Implement a CI/CD pipeline using GitHub Actions to:
-* Automatically run tests on every commit/pull request (Optional).
-* Deploy the backend to AWS. (Use the QUT provided EC2 instance)
-* Deploy the frontend to AWS.
-* Document your CI/CD workflow in the README.
+- JWT-based login/signup.
 
----
+- Only authenticated users can perform CRUD.
 
-**Submission Requirements**
+6. Version Control (GitHub)
 
-**A report **contains** the following (Provide screenshots as evidence for each implemented task. **The screenshot should **contain** your username** from JIRA, GITHUB, and AWS**):
+- main branch for production.
 
-* **JIRA Project **Management**(Provide screenshots in the **report o**f at least two epics**, **including user story, sub**t**a**sks**. **Please **don’t** provide **the **U**ser Authentication** epic**.**Provide your JIRA Board URL in the report and README file as well.**Through the JIRA Board, we will systematically review the completeness of the project features, organised under Epics, User Stories, and Sub-tasks.**
-* Requirement diagram, Block Definition Diagram (BDD), Parametric Diagram (Using project features).
-* **GitHub Repository (backend/ and frontend/)** link. We will **review** your code implementation, which you followed from the task description. We will also **review** your commits, main branch, feature branches, and pull requests. **(**Please note that the authorisation** (Log In, Registration)** is the prerequisite for backend development.**)**
-* CI/CD pipeline details step by step screenshot.
-* README.md with:
-* Project setup instructions.
-* Public URL of your project.
-* Provide a project-specific username and password if we need to access your dashboard.
+- Feature branches per Jira issue.
 
----
+- Commits and PRs follow Jira ticket references.
 
-**Assessment Criteria:**
+7. CI/CD & Deployment
 
-* Clarity and completeness of Jira board and SysML models.
-* Adherence to Git best practices and practical contributions.
-* Successful implementation, deploymentand CI/CD pipeline.
-* Problem-solving skills and the ability to go beyond basic requirements.
+- GitHub Actions for build & test automation.
+
+- Backend with PM2 on AWS EC2.
+
+- Frontend served via Nginx on AWS.
+
