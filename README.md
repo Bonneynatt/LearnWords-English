@@ -1,7 +1,4 @@
-
-**Assessment 1 (Total Marks **20**)**
-
-“Software Requirements Analysis and Design: LearnWords-English — A Full-Stack CRUD Application with DevOps Practices”
+Assignment: “Software Requirements Analysis and Design: LearnWords-English — A Full-Stack CRUD Application with DevOps Practices”
 
 
 ---
@@ -22,16 +19,19 @@ This project has been created and included user authentication using Node.js, Re
 Main features
 
 1.User Authentication (Signup, Login, and Logout)
+
 2.Flashcards Management (CRUD)
 - Create: Add new flashcards with word, definition, and example
 - Read: Browse and search existing flashcards
 - Update: Edit flashcard details
 - Delete: Remove flashcards from collection
+
 3.Quiz System (CRUD)
 - Create: Generate quizzes from flashcards
 - Read: Take quizzes with multiple-choice or input answers
 - Update: Manage/edit quiz questions
 - Delete: Remove unwanted quizzes
+
 4.Bug Tracking and Resolution
 
 ---
