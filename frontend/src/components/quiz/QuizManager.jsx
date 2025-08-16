@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosConfig';
 import QuizCreator from './QuizCreator';
-
+//This is QuizManager.jsx
 const QuizManager = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [myQuizzes, setMyQuizzes] = useState([]);
