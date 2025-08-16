@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import flashcardService from '../../services/flashcardService';
 
 const FlashcardBrowser = () => {
+  const navigate = useNavigate();
   const [flashcards, setFlashcards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -43,6 +45,10 @@ const FlashcardBrowser = () => {
 
   const handleFilterChange = (newFilters) => {
     setFilters({ ...newFilters, page: 1 }); // Reset to first page when filters change
+  };
+
+  const handleCardClick = (cardId) => {
+    navigate(`/flashcard/${cardId}`);
   };
 
   if (loading) return <div className="text-center p-4">Loading flashcards...</div>;
@@ -128,7 +134,11 @@ const FlashcardBrowser = () => {
       {/* Flashcards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
         {flashcards.map((card) => (
-          <div key={card._id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+          <div 
+            key={card._id} 
+            onClick={() => handleCardClick(card._id)}
+            className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg cursor-pointer transition-all duration-200 transform hover:scale-105"
+          >
             {/* Card Content */}
             <div className="h-64 bg-gray-50 flex items-center justify-center relative">
               <div className="text-center p-6">
@@ -180,6 +190,13 @@ const FlashcardBrowser = () => {
                   </p>
                 </div>
               )}
+              
+              {/* Click to view indicator */}
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <p className="text-xs text-blue-600 font-medium text-center">
+                  Click to explore →
+                </p>
+              </div>
             </div>
           </div>
         ))}

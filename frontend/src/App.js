@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import FlashcardsPage from './pages/FlashcardsPage';
+import FlashcardDetail from './components/flashcards/FlashcardDetail';
 import QuizManager from './components/quiz/QuizManager';
 import QuizTaker from './components/quiz/QuizTaker';
 
@@ -14,6 +15,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/flashcards" element={<FlashcardsPage />} />
+        <Route path="/flashcard/:id" element={<FlashcardDetail />} />
         <Route path="/quiz" element={<QuizManager />} />
         <Route path="/quiz/:quizId/take" element={<QuizTaker />} />
       </Routes>
