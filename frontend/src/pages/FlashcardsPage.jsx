@@ -3,6 +3,7 @@ import FlashcardManager from '../components/flashcards/FlashcardManager';
 import FlashcardBrowser from '../components/flashcards/FlashcardBrowser';
 import FlashcardViewer from '../components/flashcards/FlashcardViewer';
 //This is FlashcardPage.jsx
+
 const FlashcardsPage = () => {
   const [activeTab, setActiveTab] = useState('browse');
 
