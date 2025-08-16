@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import axiosInstance from '../../axiosConfig';
 import QuizCreator from './QuizCreator';
-
+//This is QuizManager.jsx
 const QuizManager = () => {
   const { isAuthenticated } = useAuth();
   const [quizzes, setQuizzes] = useState([]);
