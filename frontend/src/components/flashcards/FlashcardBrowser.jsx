@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import flashcardService from '../../services/flashcardService';
-
+//This is FlashcardBrowser.jsx.
 const FlashcardBrowser = () => {
   const navigate = useNavigate();
   const [flashcards, setFlashcards] = useState([]);
